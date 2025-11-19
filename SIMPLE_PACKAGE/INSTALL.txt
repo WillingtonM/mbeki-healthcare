@@ -1,0 +1,178 @@
+========================================
+Mbeki Healthcare Patient Management System
+INSTALLATION INSTRUCTIONS
+========================================
+
+Developed by Champs Group
+Website: https://www.champsafrica.com
+Email: info@champsafrica.com
+
+========================================
+SYSTEM REQUIREMENTS
+========================================
+
+✓ PHP 7.4 or higher
+✓ MySQL 5.7 or higher / MariaDB 10.2+
+✓ Web server (Apache/Nginx)
+✓ At least 50MB disk space
+✓ SSL certificate (recommended)
+
+========================================
+INSTALLATION STEPS
+========================================
+
+1. UPLOAD FILES
+   - Upload all files to your cPanel public_html directory
+   - Ensure file permissions are set correctly:
+     * Folders: 755
+     * Files: 644
+     * api/ folder: 755
+
+2. CREATE DATABASE
+   - In cPanel, go to MySQL Databases
+   - Create a new database: mbeki_healthcare
+   - Create a database user and assign to the database
+   - Grant ALL PRIVILEGES to the user
+
+3. IMPORT DATABASE SCHEMA
+   - In cPanel phpMyAdmin, select your database
+   - Click "Import" tab
+   - Upload and execute the database.sql file
+
+4. CONFIGURE ENVIRONMENT
+   - Rename .env.example to .env
+   - Edit .env with your database credentials:
+     
+     DB_HOST=localhost
+     DB_NAME=your_database_name
+     DB_USER=your_database_user
+     DB_PASS=your_database_password
+
+5. TEST INSTALLATION
+   - Visit your domain: https://yourdomain.com
+   - You should see the login dashboard
+   - Check "Settings" tab to verify database connection
+
+========================================
+SECURITY SETUP
+========================================
+
+1. SECURE THE API FOLDER
+   Add this to api/.htaccess:
+
+   <Files "*.php">
+       Order Allow,Deny
+       Allow from all
+   </Files>
+   
+   <Files "config.php">
+       Order Allow,Deny
+       Deny from all
+   </Files>
+
+2. SSL CERTIFICATE
+   - Enable SSL/HTTPS in cPanel
+   - Force HTTPS redirects
+
+3. REGULAR BACKUPS
+   - Set up automatic database backups
+   - Use the built-in export feature regularly
+
+========================================
+FEATURES INCLUDED
+========================================
+
+✓ Patient Registration & Management
+✓ Digital Consent Forms with Signatures
+✓ Comprehensive Medical History Tracking
+✓ Vitals Recording (BP, Pulse, Temp, Weight, HGT, HB)
+✓ PDF Generation for Forms and Reports
+✓ Dashboard Analytics
+✓ Patient Search and Filtering
+✓ Data Export/Import
+✓ Automatic Error Reporting to info@champsafrica.com
+✓ Professional UI with Responsive Design
+✓ Champs Group Branding
+
+========================================
+TREATMENT TYPES SUPPORTED
+========================================
+
+1. Lipolytic Injections
+2. Ozempic/Mounjaro Weight Loss
+3. Skin Tag/Mole/Wart Removal
+4. IV Therapy
+5. Custom Treatments (with custom terms)
+
+========================================
+TROUBLESHOOTING
+========================================
+
+DATABASE CONNECTION ISSUES:
+- Check database credentials in .env file
+- Verify database user has correct privileges
+- Ensure database exists and is accessible
+
+PHP ERRORS:
+- Check PHP error logs in cPanel
+- Ensure PHP version is 7.4+
+- Verify all required PHP extensions are installed
+
+PERMISSION ERRORS:
+- Set correct file permissions (folders: 755, files: 644)
+- Ensure web server can read/write files
+
+FILE UPLOAD ISSUES:
+- Check PHP upload_max_filesize setting
+- Verify post_max_size is adequate
+- Ensure tmp directory is writable
+
+========================================
+AUTOMATIC ERROR REPORTING
+========================================
+
+The system automatically reports errors to:
+📧 info@champsafrica.com
+
+Error reports include:
+- Timestamp and error details
+- User context and browser info
+- System state information
+
+This ensures quick resolution of any issues.
+
+========================================
+SUPPORT
+========================================
+
+For technical support and customization:
+
+🌐 Website: https://www.champsafrica.com
+📧 Email: info@champsafrica.com
+
+Business Hours: Monday - Friday, 9 AM - 5 PM UTC
+
+========================================
+COPYRIGHT & LICENSE
+========================================
+
+© 2024 Mbeki Healthcare Patient Management System
+Developed & Owned by Champs Group
+
+All rights reserved. This software is proprietary
+and confidential. Unauthorized copying or distribution
+is strictly prohibited.
+
+For licensing and commercial use inquiries:
+Contact info@champsafrica.com
+
+========================================
+VERSION INFORMATION
+========================================
+
+System Version: 1.0.0
+Release Date: 2024
+Architecture: Single HTML + PHP Backend
+Database: MySQL/MariaDB Compatible
+
+========================================

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mbeki Healthcare - Patient Management</title>
+
+    <meta name="description" content="Mbeki Healthcare patient management system — manage patients, consents, visits and generate reports. Developed and managed by Champs Group.">
+    <meta name="keywords" content="Mbeki Healthcare, patient management, medical consent, clinic system, Champs Group">
+    <meta name="author" content="Champs Group">
+    <meta name="owner" content="Champs Group">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.mbekihealthcare.co.za/">
+    <meta property="og:title" content="Mbeki Healthcare - Patient Management">
+    <meta property="og:description" content="Manage patients, consent forms, visits and reports. Built by Champs Group.">
+    <meta property="og:type" content="website">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root { --primary: #2c6e9b; --secondary: #4abebd; --accent: #ff6b6b; --light: #f8f9fa; --dark: #343a40; --success: #28a745; }
+        * { font-family: 'Poppins', sans-serif; }
+        body { background-color: #f5f7f9; color: #333; }
+        .navbar { background: linear-gradient(135deg, var(--primary), var(--secondary)); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .card { border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; border: none; transition: transform 0.3s ease; }
+        .card-header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 10px 10px 0 0 !important; font-weight: 600; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 6px; font-weight: 500; padding: 10px 20px; }
+        .signature-pad { border: 1px dashed #ccc; border-radius: 5px; background-color: #f9f9f9; cursor: crosshair; }
+        .consent-text { max-height: 400px; overflow-y: auto; padding: 15px; border: 1px solid #eee; border-radius: 5px; background-color: #fafafa; font-size: 0.95rem; line-height: 1.6; }
+        .footer { background-color: var(--dark); color: white; padding: 20px 0; margin-top: 40px; }
+        .treatment-specific-fields { border-left: 3px solid var(--secondary); padding-left: 15px; margin-top: 15px; }
+        .form-section-title { font-weight: 600; color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#" id="homeTab">
+                <i class="fas fa-hospital me-2" style="font-size:1.8rem"></i>
+                <span class="fw-bold">Mbeki Healthcare</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" id="navHome" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" id="navPatients" href="#">Patients</a></li>
+                    <li class="nav-item"><a class="nav-link" id="navReports" href="#">Reports</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="card-header"><h5 class="mb-0">Navigation</h5></div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary active" id="patientConsentBtn">Patient Consent</button>
+                            <button class="btn btn-outline-primary" id="patientLookupBtn">Patient Lookup</button>
+                            <button class="btn btn-outline-primary" id="reportsBtn">Generate Reports</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="card" id="dashboardSection">
+                    <div class="card-header"><h4 class="mb-0">Dashboard</h4></div>
+                    <div class="card-body"><p class="text-muted">Welcome to the Mbeki Healthcare System. Select 'Patient Consent' to begin.</p></div>
+                </div>
+
+                <div class="card d-none" id="patientConsentSection">
+                    <div class="card-header"><h4 class="mb-0">Consent Form</h4></div>
+                    <div class="card-body">
+                        <form id="consentForm">
+                            <input type="hidden" id="editingIndex">
+                            
+                            <h5 class="form-section-title">Patient Details</h5>
+                            <div class="row mb-3">
+                                <div class="col-md-6"><label>Name & Surname</label><input type="text" class="form-control" id="patientName" required></div>
+                                <div class="col-md-6"><label>Date of Birth</label><input type="date" class="form-control" id="patientDob" required></div>
+                            </div>
+                             <div class="row mb-3">
+                                <div class="col-md-6"><label>Contact Number</label><input type="tel" class="form-control" id="patientPhone" required></div>
+                                <div class="col-md-6"><label>Next of Kin</label><input type="text" class="form-control" id="patientNextOfKin"></div>
+                             </div>
+                             <div class="row mb-3">
+                                <div class="col-md-6"><label>Next of Kin Contact</label><input type="tel" class="form-control" id="patientNextOfKinContact"></div>
+                             </div>
+
+                             <h5 class="form-section-title">Vitals</h5>
+                             <div class="row mb-3">
+                                <div class="col-md-2"><label>BP</label><input type="text" class="form-control" id="vitalBP"></div>
+                                <div class="col-md-2"><label>Pulse</label><input type="text" class="form-control" id="vitalPulse"></div>
+                                <div class="col-md-2"><label>Temp</label><input type="text" class="form-control" id="vitalTemp"></div>
+                                <div class="col-md-2"><label>Weight</label><input type="text" class="form-control" id="vitalWeight"></div>
+                                <div class="col-md-2"><label>HGT</label><input type="text" class="form-control" id="vitalHGT"></div>
+                                <div class="col-md-2"><label>HB</label><input type="text" class="form-control" id="vitalHB"></div>
+                             </div>
+                            
+                            <h5 class="form-section-title">Treatment Selection</h5>
+                            <div class="mb-3">
+                                <label>Treatment Type</label>
+                                <select class="form-select" id="treatmentType" required>
+                                    <option value="" selected disabled>Select a Treatment...</option>
+                                    <option value="lipolytic">Lipolytic Injections</option>
+                                    <option value="ozempic_mounjaro">Ozempic/Mounjaro Weight Loss</option>
+                                    <option value="skin_removal">Skin Tag/Mole/Wart Removal</option>
+                                    <option value="iv_therapy">IV Therapy</option>
+                                </select>
+                            </div>
+
+                            <div id="treatmentSpecificFieldsContainer"></div>
+                            
+                            <div id="consentContainer" class="d-none">
+                                <h5 class="form-section-title">Consent Text</h5>
+                                <div id="consentText" class="consent-text">Please select a treatment to view the consent details.</div>
+                            </div>
+
+                            <div id="signatureContainer" class="d-none">
+                                <h5 class="form-section-title">Signature</h5>
+                                <div class="mb-3">
+                                    <div class="signature-pad"><canvas id="signatureCanvas" width="500" height="150"></canvas></div>
+                                    <button type="button" id="clearSignature" class="btn btn-sm btn-outline-secondary mt-2">Clear Signature</button>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Consent</button>
+                                <button type="button" id="exportConsentPdf" class="btn btn-outline-primary">Export Consent PDF</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card d-none" id="patientLookupSection">
+                    <div class="card-header"><h4 class="mb-0">Patients</h4></div>
+                    <div class="card-body">
+                        <table class="table table-hover"><thead><tr><th>Name</th><th>DOB</th><th>Phone</th><th>Treatment</th><th>Actions</th></tr></thead><tbody id="patientTable"></tbody></table>
+                    </div>
+                </div>
+
+                <div class="card d-none" id="reportsSection">
+                    <div class="card-header"><h4 class="mb-0">Reports</h4></div>
+                    <div class="card-body">
+                        <div class="mb-3"><input type="text" id="reportSearch" class="form-control" placeholder="Search patient by name..."></div>
+                        <div id="reportContent"><p class="text-muted">Search for a patient or select 'View' from the patient list to see their report.</p></div>
+                        <button class="btn btn-primary d-none" id="generatePdf">Generate Full Report PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-5"><div class="container text-center"><p>© 2025 Mbeki Healthcare. Managed by Champs Group</p></div></footer>
+
+    <script>
+        // --- DATA STORE FOR CONSENT FORMS ---
+        const consentData = {
+            lipolytic: {
+                name: "Lipolytic Injections",
+                fields: `
+                    <div class="treatment-specific-fields">
+                        <label class="form-label fw-bold">Select Treatment Area(s):</label>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="chin" id="area_chin"><label class="form-check-label" for="area_chin">Beneath the chin</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="cheeks" id="area_cheeks"><label class="form-check-label" for="area_cheeks">Cheeks</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="under_arms" id="area_under_arms"><label class="form-check-label" for="area_under_arms">Under arms</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="waist" id="area_waist"><label class="form-check-label" for="area_waist">Waist (love handles)</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="abdomen" id="area_abdomen"><label class="form-check-label" for="area_abdomen">Abdomen</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" value="thighs" id="area_thighs"><label class="form-check-label" for="area_thighs">Inner or outer thighs</label></div>
+                    </div>`,
+                text: `
+                    <h6>CONSET FOR LIPOLYTIC INJECTIONS</h6>
+                    <p>I hereby authorise Phindie Mbeki Healthcare to perform fat dissolving injections, for the purpose of reducing unsightly, undesirable, problematic and unhealthy excessive fat deposits in the area(s) selected above.</p>
+                    <strong>I FULLY UNDERSTAND AND ACKNOWLEDGE THAT:</strong>
+                    <ul>
+                        <li>I am freely choosing to undertake this procedure at my own risk.</li>
+                        <li>I am solely responsible for the complications and to attend my schedule appointment.</li>
+                        <li>I understand that the failure to not attend my appointment may affect the results of the treatment.</li>
+                        <li>I may require further, repeat treatment beyond what has been initially planned, to achieve satisfactory results and I will require to pay a fee for every treatment session.</li>
+                        <li>Treatment, such as that to which I have consented to receive, are medical procedures that carry with them certain potential complications or side effects.</li>
+                        <li>I understand that after the procedure my ability to function daily activities and I undertake the treatment solely at my own risk.</li>
+                        <li>I have received detailed information, in clear terms, regarding the contraindications, potential complications and side effects of the treatment;</li>
+                        <li>I have been given the opportunity to ask questions about the treatment and I now fully understand and accept the benefits and the side effects both immediate and long-term, general and specific, which this procedure may cause.</li>
+                        <li>These may include permanent, or temporary, general or specific risks reported in the clinical studies such as: Pain, Swelling, Redness, Burning, Stinging, Tenderness, Bleeding, Headache, Nausea, Facial and neck muscle weakness, nerve damage, numbness, areas of skin harden, skin and muscle laceration, scarring, allergic reaction, increased skin laxity, infection and discolouration of the skin.</li>
+                        <li>Should complications occur because of the treatment I received, I may require emergency medical treatment, and I am aware that I am solely responsible for any costs associated with such required treatment and this is not necessarily the results of the treatment or mistreatment received, but rather it is a potential when receiving any medical treatment.</li>
+                        <li>When giving the medical history, I have done so to the best of my knowledge, without withholding any information, as doing so may compromise the treatment provided and my health, for I am fully responsible.</li>
+                        <li>I understand that treatment results cannot be guaranteed and may be temporary in nature, requiring re-treatment in the future, though this will vary depending on various personal circumstances and area being treated.</li>
+                        <li>I understand that best results are achieved when I commit to healthy lifestyle, diet and exercise.</li>
+                    </ul>`
+            },
+            ozempic_mounjaro: {
+                name: "Ozempic/Mounjaro Weight Loss",
+                fields: "",
+                text: `
+                    <h6>IMPORTANT INFORMATION & CONSENT TO OZEMPIC/MOUNJARO® TREATMENT</h6>
+                    <p>Ozempic/Mounjaro® is a medicine that contains an active substance called tirzepatide.</p>
+                    <strong>How it works:</strong>
+                    <p>Ozemipc/Mounjaro® works on two different hormonal receptors that help regulate your appetite: glucagon-like peptide-1 (GLP-1) and glucose-dependent insulinotropic polypeptide (GIP). It primarily works by regulating your appetite, giving you a sense of satiety (‘fullness’), making you feel less hungry and experience less food cravings. This will help you eat less food and reduce your body weight. It should be used with a reduced-calorie diet and increased physical activity.</p>
+                    <strong>How to use it:</strong>
+                    <p>The starting dose is 2.5mg once a week for four weeks. Your dose will be gradually increased every 4 weeks, depending on side effects and tolerance of the treatment. The maximum dose is 15mg weekly. It is given as an injection under the skin (subcutaneous injection). If you miss a dose and it has been 4 days or less, take it as soon as you remember. If it has been more than 4 days, skip the missed dose. The minimum time between two doses must be at least 3 days.</p>
+                    <strong>SIDE EFFECTS:</strong>
+                    <p>Like all medicines, Ozempic/Mounjaro® can cause side effects. It is important to avoid dehydration by drinking plenty of fluids.</p>
+                    <ul>
+                        <li><strong>Very Common:</strong> Nausea, diarrhoea, vomiting, constipation, hypoglycaemia.</li>
+                        <li><strong>Common:</strong> Dizziness, decreased appetite, abdominal pain, indigestion, bloating, fatigue, hair loss, injection site reactions.</li>
+                        <li><strong>Uncommon:</strong> Gallstones, cholecystitis, acute pancreatitis.</li>
+                        <li><strong>Rare but serious:</strong> Severe allergic reactions (anaphylactic reaction, angioedema). Seek immediate medical help for symptoms like breathing problems or rapid swelling.</li>
+                        <li><strong>Eye side effects:</strong> A potential link to NAION, which can cause sudden vision loss. See a doctor immediately if you experience eye symptoms.</li>
+                    </ul>
+                    <strong>Nutritional consequences:</strong>
+                    <p>The restricted diet may cause nutrient shortages. You have been made aware of the need to take multivitamin/mineral supplementation and sometimes vitamin B12 injections during treatment, and the need for follow-up blood tests.</p>
+                    <strong>WARNINGS AND PRECAUTIONS:</strong>
+                    <p>Consult your healthcare provider before use if you have severe digestion problems, liver or kidney disease, pancreatitis, eye problems, or use other weight loss/diabetes medicines. Do not use if pregnant, planning pregnancy, or breast-feeding. Use additional contraception for 4 weeks after starting and after each dose increase.</p>
+                    <strong>ACKNOWLEDGEMENT:</strong>
+                    <p>I HAVE READ AND UNDERSTOOD ALL OF THE ABOVE INFORMATION AND CONSENT TO OZEMPIC/MOUNJARO TREATMENT.</p>
+                    `
+            },
+            skin_removal: {
+                name: "Skin Tag/Mole/Wart Removal",
+                fields: `
+                    <div class="treatment-specific-fields">
+                        <div class="mb-3"><label class="form-label fw-bold">Chronic or current Acute illnesses:</label><input type="text" class="form-control" id="med_illnesses"></div>
+                        <div class="mb-3"><label class="form-label fw-bold">Current Medication & Supplements:</label><input type="text" class="form-control" id="med_supplements"></div>
+                        <div class="mb-3"><label class="form-label fw-bold">Do you have a history of excessive scarring or keloids?</label><input type="text" class="form-control" id="med_keloids" placeholder="YES/NO and specify"></div>
+                        <div class="mb-3"><label class="form-label fw-bold">Are you currently under the care of a dermatologist or other medical care?</label><input type="text" class="form-control" id="med_dermatologist" placeholder="YES/NO and specify"></div>
+                        <div class="mb-3"><label class="form-label fw-bold">Please explain any previous skin procedures, particularly skin tag removal:</label><textarea class="form-control" id="med_previous_procedures"></textarea></div>
+                        <div class="mb-3"><label class="form-label fw-bold">List any known allergies (include medication & latex):</label><input type="text" class="form-control" id="med_allergies"></div>
+                        <hr>
+                        <div class="mb-3"><label class="form-label fw-bold">Location(s) of skin tags:</label><input type="text" class="form-control" id="skin_location"></div>
+                        <div class="mb-3"><label class="form-label fw-bold">Estimated number for removal:</label><input type="number" class="form-control" id="skin_number"></div>
+                        <div class="mb-3"><label class="form-label fw-bold">Have any changed colour or size recently?</label><input type="text" class="form-control" id="skin_changes" placeholder="YES/NO"></div>
+                    </div>
+                `,
+                text: `
+                    <h6>SKIN TAGS/ MOLES/ WARTS/ FRECKLES REMOVAL CONSENT FORM</h6>
+                    <p>I hereby authorize PHINDIE MBEKI HEALTHCARE to perform skin tag/ mole/ warts removal by plasma pen on me, and release PHINDIE MBEKI HEALTHCARE from all liabilities associated with the procedure mentioned above.</p>
+                    <strong>The following problems may occur with the treatments:</strong>
+                    <ul>
+                        <li>There is a risk of scarring.</li>
+                        <li>Short term effects may include reddening, mild burning, temporary bruising or blistering. Hyper/hypopigmentation may be noted after the treatment. These effects usually resolve within 2-6 weeks, but permanent colour change is a rare risk. Avoiding sun exposure before and after the treatment reduces the risk of colour change.</li>
+                        <li><strong>Infection:</strong> Although infection after the treatment is unusual, inflammation of the treated area can occur and can result into infection.</li>
+                        <li><strong>Bleeding:</strong> Pinpoint bleeding is rare but can occur during and following the procedure.</li>
+                        <li><strong>Allergic Reactions:</strong> In rare cases, local allergies to tape, preservatives used or topical preparations have been reported.</li>
+                        <li>Compliance with aftercare guidelines is crucial for healing, prevention of scarring, and hyperpigmentation.</li>
+                        <li>There is also the possibility that other side effects or complications not presently known, recognized, described to me now or understood may develop now or in future.</li>
+                        <li>Other rare risks include Purpura (purple bruising), Pigment change, Crusting/scab, and failure to improve quality of life.</li>
+                    </ul>
+                    <strong>ACKNOWLEDGEMENT:</strong>
+                    <p>I understand that there are no guarantees and that I am releasing PHINDIE MBEKI HEALTHCARE from all liabilities. My questions regarding the procedure have been answered satisfactorily. I understand the procedure and accept the risks.</p>`
+            },
+            iv_therapy: {
+                name: "IV Therapy",
+                fields: "",
+                text: `
+                    <h6>CONSENT FOR INTRAVENOUS NUTRIENT THERAPY</h6>
+                    <p>I hereby authorize the administration of intravenous vitamins, minerals, and other nutrients. This procedure is recommended for replacement of these essential nutrients, correction of deficiencies, and for other therapeutic effects, such as improving immune function, improving antioxidant status, reducing oxidative damage, decreasing bronchospasm, improving fatigue, etc.</p>
+                    <strong>The principal side effects that may accompany intravenous administration of nutrients include:</strong>
+                    <ul>
+                        <li>-burning and stinging at the site of infusion or if IV infiltrates into surrounding tissue</li>
+                        <li>-muscular spasms, weakness, or fatigue</li>
+                        <li>-allergic reactions (rare)</li>
+                        <li>-local thrombophlebitis (very rare).</li>
+                    </ul>
+                    <p>This procedure may be considered medically unnecessary. It may or may not mitigate, alleviate, or cure the condition for which it has been prescribed. This therapy has been recommended to you in the belief that it is of potential benefit in these circumstances and its use will quite probably improve the condition for which you are under treatment and in your overall health.</p>
+                    <p>I understand that my treatment records and test results may be used as the basis for a published study and consent to such use of my treatment results. I understand that I may suspend or terminate my treatment at anytime by informing my medical provider.</p>
+                    <p>I assume full liability for any adverse effects that may result from the non-negligent administration of the proposed treatment. I waive any claim in law or equity for redress of any grievance that I may have concerned or resulting from the procedure, except as that claim pertains to negligent administration of this procedure.</p>
+                    <p>The risks involved and the possibilities of complications have been explained to me. I fully understand and confirm that the nature and purpose of the aforementioned treatment to be provided may be considered unproven by scientific testing and peer-reviewed publications and therefore may be considered medically unnecessary or not currently indicated.</p>
+                    <p>I hereby place myself under your care for intravenous vitamin therapy, and agree to the above release. I also verify that all information presented to medical provider in my medical history is true to the best of my knowledge.</p>
+                    <p>I hereby acknowledge that I understand that my Insurance coverage, including Medicare, may not pay for this Non-covered service, and that all services ancillary to this treatment may be also non-covered services and non- reimbursable. I agree to be responsible for payment at the time of service for all services, including non-covered services.</p>
+                    `
+            }
+        };
+
+
+        // --- APPLICATION LOGIC ---
+        const sections={dashboard:document.getElementById('dashboardSection'),consent:document.getElementById('patientConsentSection'),lookup:document.getElementById('patientLookupSection'),reports:document.getElementById('reportsSection')};
+        function showSection(s){Object.values(sections).forEach(sec=>sec.classList.add('d-none'));s.classList.remove('d-none');}
+        document.getElementById('navHome').onclick=()=>showSection(sections.dashboard);
+        document.getElementById('navPatients').onclick=()=>{showSection(sections.lookup); renderPatients();};
+        document.getElementById('navReports').onclick=()=>showSection(sections.reports);
+        document.getElementById('patientConsentBtn').onclick=()=>showSection(sections.consent);
+        document.getElementById('patientLookupBtn').onclick=()=>{showSection(sections.lookup); renderPatients();};
+        document.getElementById('reportsBtn').onclick=()=>showSection(sections.reports);
+
+        let patients= JSON.parse(localStorage.getItem('mbekiPatients')) || [];
+        const consentForm=document.getElementById('consentForm');
+        const patientTable=document.getElementById('patientTable');
+
+        // Signature Pad Logic
+        const canvas=document.getElementById('signatureCanvas');
+        const ctx=canvas.getContext('2d');
+        let drawing=false,lastX=0,lastY=0;
+        canvas.addEventListener('mousedown',e=>{drawing=true;[lastX,lastY]=[e.offsetX,e.offsetY];});
+        canvas.addEventListener('mousemove',e=>{if(!drawing)return;ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();[lastX,lastY]=[e.offsetX,e.offsetY];});
+        canvas.addEventListener('mouseup',()=>drawing=false);
+        document.getElementById('clearSignature').onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        // Dynamic Form Update on Treatment Selection
+        const treatmentTypeSelect = document.getElementById('treatmentType');
+        treatmentTypeSelect.addEventListener('change', function() {
+            const selectedValue = this.value;
+            const fieldsContainer = document.getElementById('treatmentSpecificFieldsContainer');
+            const consentTextDiv = document.getElementById('consentText');
+            
+            // Show consent and signature sections
+            document.getElementById('consentContainer').classList.remove('d-none');
+            document.getElementById('signatureContainer').classList.remove('d-none');
+
+            if (selectedValue && consentData[selectedValue]) {
+                fieldsContainer.innerHTML = consentData[selectedValue].fields;
+                consentTextDiv.innerHTML = consentData[selectedValue].text;
+            } else {
+                fieldsContainer.innerHTML = '';
+                consentTextDiv.innerHTML = 'Please select a treatment to view the consent details.';
+            }
+        });
+        
+        // Save Consent Form
+        consentForm.addEventListener('submit',function(e){
+            e.preventDefault();
+            const idx = document.getElementById('editingIndex').value;
+            
+            const treatmentId = document.getElementById('treatmentType').value;
+            let treatmentSpecificData = {};
+
+            if (treatmentId === 'lipolytic') {
+                treatmentSpecificData.areas = Array.from(document.querySelectorAll('.treatment-specific-fields input[type="checkbox"]:checked')).map(cb => cb.value);
+            } else if (treatmentId === 'skin_removal') {
+                treatmentSpecificData = {
+                    illnesses: document.getElementById('med_illnesses').value,
+                    supplements: document.getElementById('med_supplements').value,
+                    keloids: document.getElementById('med_keloids').value,
+                    dermatologist: document.getElementById('med_dermatologist').value,
+                    previousProcedures: document.getElementById('med_previous_procedures').value,
+                    allergies: document.getElementById('med_allergies').value,
+                    skinLocation: document.getElementById('skin_location').value,
+                    skinNumber: document.getElementById('skin_number').value,
+                    skinChanges: document.getElementById('skin_changes').value
+                };
+            }
+
+            const patientData = {
+                name: document.getElementById('patientName').value,
+                dob: document.getElementById('patientDob').value,
+                phone: document.getElementById('patientPhone').value,
+                nextOfKin: document.getElementById('patientNextOfKin').value,
+                nextOfKinContact: document.getElementById('patientNextOfKinContact').value,
+                vitals: {
+                    bp: document.getElementById('vitalBP').value,
+                    pulse: document.getElementById('vitalPulse').value,
+                    temp: document.getElementById('vitalTemp').value,
+                    weight: document.getElementById('vitalWeight').value,
+                    hgt: document.getElementById('vitalHGT').value,
+                    hb: document.getElementById('vitalHB').value,
+                },
+                treatmentId: treatmentId,
+                treatmentName: consentData[treatmentId].name,
+                consentText: consentData[treatmentId].text,
+                specifics: treatmentSpecificData,
+                signature: canvas.toDataURL()
+            };
+
+            if(idx){
+                patients[idx]=patientData;
+            }else{
+                patients.push(patientData);
+            } 
+            
+            localStorage.setItem('mbekiPatients', JSON.stringify(patients));
+            renderPatients();
+            consentForm.reset();
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            document.getElementById('treatmentSpecificFieldsContainer').innerHTML = '';
+            document.getElementById('consentContainer').classList.add('d-none');
+            document.getElementById('signatureContainer').classList.add('d-none');
+            alert('Patient consent has been saved successfully!');
+            showSection(sections.lookup);
+        });
+
+        function renderPatients(){
+            patientTable.innerHTML='';
+            patients.forEach((p,i)=>{
+                const tr=document.createElement('tr');
+                tr.innerHTML=`<td>${p.name}</td><td>${p.dob}</td><td>${p.phone}</td><td>${p.treatmentName}</td><td><button class='btn btn-sm btn-success' onclick='viewPatient(${i})'>View</button> <button class='btn btn-sm btn-outline-primary' onclick='downloadConsent(${i})'>Download PDF</button></td>`;
+                patientTable.appendChild(tr);
+            });
+        }
+
+        window.viewPatient=function(i){
+            showSection(sections.reports);
+            const p=patients[i];
+            const reportContent = document.getElementById('reportContent');
+            
+            let specificsHtml = '';
+            if (p.treatmentId === 'lipolytic') {
+                specificsHtml = `<h6>Treatment Areas</h6><p>${p.specifics.areas.join(', ') || 'None specified'}</p>`;
+            } else if (p.treatmentId === 'skin_removal') {
+                specificsHtml = `
+                    <h6>Medical History</h6>
+                    <p><strong>Illnesses:</strong> ${p.specifics.illnesses}</p>
+                    <p><strong>Medication/Supplements:</strong> ${p.specifics.supplements}</p>
+                    <p><strong>History of Keloids:</strong> ${p.specifics.keloids}</p>
+                    <p><strong>Under Dermatologist Care:</strong> ${p.specifics.dermatologist}</p>
+                    <p><strong>Previous Procedures:</strong> ${p.specifics.previousProcedures}</p>
+                    <p><strong>Allergies:</strong> ${p.specifics.allergies}</p>
+                    <h6>Skin Tag Specifics</h6>
+                    <p><strong>Location:</strong> ${p.specifics.skinLocation}</p>
+                    <p><strong>Number:</strong> ${p.specifics.skinNumber}</p>
+                    <p><strong>Recent Changes:</strong> ${p.specifics.skinChanges}</p>
+                `;
+            }
+
+            reportContent.innerHTML=`
+                <div id="pdf-report-content">
+                    <h5>Patient Report: ${p.name}</h5>
+                    <p><strong>DOB:</strong> ${p.dob}</p>
+                    <p><strong>Phone:</strong> ${p.phone}</p>
+                    <p><strong>Next of Kin:</strong> ${p.nextOfKin} (${p.nextOfKinContact})</p>
+                    <hr>
+                    <h6>Vitals</h6>
+                    <p><strong>BP:</strong> ${p.vitals.bp} | <strong>Pulse:</strong> ${p.vitals.pulse} | <strong>Temp:</strong> ${p.vitals.temp} | <strong>Weight:</strong> ${p.vitals.weight} | <strong>HGT:</strong> ${p.vitals.hgt} | <strong>HB:</strong> ${p.vitals.hb}</p>
+                    <hr>
+                    <h5>Treatment: ${p.treatmentName}</h5>
+                    ${specificsHtml}
+                    <hr>
+                    <h5>Consent Details</h5>
+                    <div class="consent-text" style="height: 200px;">${p.consentText}</div>
+                    <h5>Signature</h5>
+                    <img src='${p.signature}' width='200' style="border: 1px solid #ccc;"/>
+                </div>
+            `;
+            
+            const generatePdfBtn = document.getElementById('generatePdf');
+            generatePdfBtn.classList.remove('d-none');
+            generatePdfBtn.onclick=()=>{
+                const element = document.getElementById('pdf-report-content');
+                html2pdf().from(element).set({filename: `${p.name}_report.pdf`, jsPDF: { orientation: 'portrait' } }).save();
+            };
+        };
+
+        window.downloadConsent=function(i){
+            const p = patients[i];
+            let specificsHtml = '';
+             if (p.treatmentId === 'lipolytic') {
+                specificsHtml = `<h6>Treatment Areas</h6><p>${p.specifics.areas.join(', ') || 'None specified'}</p><hr>`;
+            } else if (p.treatmentId === 'skin_removal') {
+                 specificsHtml = `
+                    <h6>Medical History & Specifics</h6>
+                    <p><strong>Illnesses:</strong> ${p.specifics.illnesses}</p>
+                    <p><strong>Medication/Supplements:</strong> ${p.specifics.supplements}</p>
+                    <p><strong>History of Keloids:</strong> ${p.specifics.keloids}</p>
+                    <p><strong>Allergies:</strong> ${p.specifics.allergies}</p>
+                    <p><strong>Location of Tags:</strong> ${p.specifics.skinLocation}</p>
+                    <hr>
+                `;
+            }
+
+            const element = document.createElement('div');
+            element.innerHTML = `
+                <div style="padding: 20px; font-family: sans-serif;">
+                    <h2 style="color: #2c6e9b;">PHINDIE MBEKI HEALTHCARE - CONSENT FORM</h2>
+                    <p>5 Perold Street Soneike, Kuilsriver | PRAC. NUMBER: 1104942</p>
+                    <hr>
+                    <h4>Patient Details</h4>
+                    <p><strong>Name:</strong> ${p.name}</p>
+                    <p><strong>DOB:</strong> ${p.dob}</p>
+                    <p><strong>Phone:</strong> ${p.phone}</p>
+                    <hr>
+                    <h4>Consent for: ${p.treatmentName}</h4>
+                    ${specificsHtml}
+                    <div>${p.consentText}</div>
+                    <hr>
+                    <h5>Patient Signature</h5>
+                    <img src='${p.signature}' width='250' style="border-bottom: 1px solid #000;"/>
+                    <p><strong>Date of Consent:</strong> ${new Date().toLocaleDateString('en-ZA')}</p>
+                </div>`;
+            html2pdf().from(element).set({filename: `${p.name}_consent.pdf`}).save();
+        };
+
+        document.getElementById('reportSearch').addEventListener('input',function(){
+            const query=this.value.toLowerCase();
+            const match=patients.find(p=>p.name.toLowerCase().includes(query));
+            if(match){
+                const matchIndex = patients.findIndex(p => p.name.toLowerCase().includes(query));
+                viewPatient(matchIndex);
+            } else {
+                document.getElementById('reportContent').innerHTML='<p class="text-muted">No patient found matching your search.</p>';
+                document.getElementById('generatePdf').classList.add('d-none');
+            }
+        });
+
+        // Initial render
+        renderPatients();
+    </script>
+</body>
+</html>

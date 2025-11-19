@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mbeki Healthcare Patient Management System</title>
+    <meta name="description" content="Professional healthcare patient management system with digital consent forms, patient records, medical certificates, and comprehensive reporting.">
+    <meta name="keywords" content="healthcare, patient management, medical system, consent forms, digital signatures, medical certificates">
+    <meta name="author" content="Champs Group">
+    <link rel="canonical" href="https://www.champsafrica.com">
+    
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="Mbeki Healthcare Patient Management System">
+    <meta property="og:description" content="Professional healthcare patient management system developed by Champs Group">
+    <meta property="og:url" content="https://www.champsafrica.com">
+    <meta property="og:type" content="website">
+    
+    <style>
+        /* CSS Reset and Base Styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #0ea5e9;
+            --background: #ffffff;
+            --foreground: #0f172a;
+            --muted: #f8fafc;
+            --muted-foreground: #64748b;
+            --border: #e2e8f0;
+            --card: #ffffff;
+            --radius: 0.5rem;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        /* Navigation */
+        .nav {
+            background: var(--muted);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            overflow-x: auto;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 0;
+            list-style: none;
+            min-width: max-content;
+        }
+        
+        .nav-tab {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .nav-tab:hover {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+        }
+        
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: rgba(37, 99, 235, 0.05);
+        }
+        
+        /* Main Content */
+        .main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--foreground);
+        }
+        
+        .card-description {
+            color: var(--muted-foreground);
+            margin-top: 0.5rem;
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--foreground);
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #0284c7;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #d97706;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--foreground);
+        }
+        
+        .btn-outline:hover {
+            background: var(--muted);
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            color: var(--muted-foreground);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .table th {
+            background: var(--muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .table tbody tr:hover {
+            background: var(--muted);
+        }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: var(--background);
+            padding: 2rem;
+            border-radius: var(--radius);
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--muted-foreground);
+        }
+        
+        /* Signature Canvas */
+        .signature-container {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            text-align: center;
+            background: var(--muted);
+        }
+        
+        #signatureCanvas, #certificateSignatureCanvas {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: white;
+            cursor: crosshair;
+        }
+        
+        /* Visit Tracking */
+        .visit-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .visit-tab {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .visit-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .visit-tab.completed {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+        
+        .visit-content {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            background: var(--card);
+        }
+        
+        /* Medical Certificate */
+        .certificate-preview {
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 2rem;
+            background: white;
+            margin: 1.5rem 0;
+            font-family: 'Times New Roman', serif;
+            line-height: 1.8;
+        }
+        
+        .certificate-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+        
+        .certificate-stamp {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem auto;
+            background: var(--muted);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        /* Payment Options */
+        .payment-section {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            background: var(--muted);
+            margin-top: 1rem;
+        }
+        
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .payment-method {
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+        
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.1);
+        }
+        
+        .medical-aid-details {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: white;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--muted);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-text {
+            color: var(--muted-foreground);
+            font-size: 0.9rem;
+        }
+        
+        .footer-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Utilities */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .text-warning { color: var(--warning); }
+        .text-info { color: var(--info); }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .p-1 { padding: 0.5rem; }
+        .p-2 { padding: 1rem; }
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            color: white;
+            font-weight: 500;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: 400px;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+        .toast.warning { background: var(--warning); }
+        .toast.info { background: var(--info); }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main { padding: 1rem; }
+            .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
+            .nav-tabs { flex-wrap: wrap; }
+            .footer-content { flex-direction: column; text-align: center; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .visit-tabs { justify-content: center; }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .payment-methods { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1>🏥 Mbeki Healthcare Patient Management System</h1>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <ul class="nav-tabs">
+            <li><button class="nav-tab active" onclick="showTab('dashboard')" data-testid="nav-dashboard">Dashboard</button></li>
+            <li><button class="nav-tab" onclick="showTab('registration')" data-testid="nav-registration">Patient Registration</button></li>
+            <li><button class="nav-tab" onclick="showTab('lookup')" data-testid="nav-lookup">Patient Lookup</button></li>
+            <li><button class="nav-tab" onclick="showTab('visits')" data-testid="nav-visits">Visit Tracking</button></li>
+            <li><button class="nav-tab" onclick="showTab('consent')" data-testid="nav-consent">Consent Forms</button></li>
+            <li><button class="nav-tab" onclick="showTab('certificates')" data-testid="nav-certificates">Medical Certificates</button></li>
+            <li><button class="nav-tab" onclick="showTab('reports')" data-testid="nav-reports">Reports</button></li>
+            <li><button class="nav-tab" onclick="showTab('settings')" data-testid="nav-settings">Settings</button></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Dashboard Overview</h2>
+                    <p class="card-description">System statistics and recent activity</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalPatients" data-testid="stat-total-patients">0</div>
+                        <div class="stat-label">Total Patients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="consentForms" data-testid="stat-consent-forms">0</div>
+                        <div class="stat-label">Consent Forms</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayVisits" data-testid="stat-today-visits">0</div>
+                        <div class="stat-label">Today's Visits</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayCertificates" data-testid="stat-today-certificates">0</div>
+                        <div class="stat-label">Today's Certificates</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="upcomingAppointments" data-testid="stat-upcoming-appointments">0</div>
+                        <div class="stat-label">Upcoming Appointments</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="validCertificates" data-testid="stat-valid-certificates">0</div>
+                        <div class="stat-label">Valid Certificates</div>
+                    </div>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="card">
+                        <h3 class="card-title">Recent Patients</h3>
+                        <div id="recentPatients" data-testid="recent-patients">
+                            <p class="text-center">Loading recent patients...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Payment Method Breakdown</h3>
+                        <div id="paymentBreakdown" data-testid="payment-breakdown">
+                            <p class="text-center">Loading payment statistics...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Registration Tab -->
+        <div id="registration" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Patient Registration</h2>
+                    <p class="card-description">Register a new patient with comprehensive information</p>
+                </div>
+                
+                <form id="patientForm" data-testid="patient-form">
+                    <h3 class="card-title mb-2">Personal Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">First Name *</label>
+                            <input type="text" class="form-input" name="firstName" required data-testid="input-first-name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Name *</label>
+                            <input type="text" class="form-input" name="lastName" required data-testid="input-last-name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth *</label>
+                            <input type="date" class="form-input" name="dateOfBirth" required data-testid="input-date-of-birth">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            <select class="form-select" name="gender" data-testid="select-gender">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ID Number</label>
+                            <input type="text" class="form-input" name="idNumber" data-testid="input-id-number">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-input" name="phone" required data-testid="input-phone">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" name="email" data-testid="input-email">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <textarea class="form-textarea" name="address" rows="3" data-testid="textarea-address"></textarea>
+                    </div>
+
+                    <h3 class="card-title mb-2 mt-2">Emergency Contact</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Emergency Contact Name</label>
+                            <input type="text" class="form-input" name="nextOfKin" data-testid="input-next-of-kin">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Emergency Contact Phone</label>
+                            <input type="tel" class="form-input" name="nextOfKinPhone" data-testid="input-next-of-kin-phone">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Relationship</label>
+                            <input type="text" class="form-input" name="relationship" data-testid="input-relationship">
+                        </div>
+                    </div>
+
+                    <h3 class="card-title mb-2 mt-2">Medical History</h3>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Known Allergies</label>
+                            <textarea class="form-textarea" name="allergies" rows="3" data-testid="textarea-allergies"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Medical History</label>
+                            <textarea class="form-textarea" name="medicalHistory" rows="3" data-testid="textarea-medical-history"></textarea>
+                        </div>
+                    </div>
+
+                    <h3 class="card-title mb-2 mt-2">Payment Information</h3>
+                    <div class="payment-section">
+                        <div class="form-group">
+                            <label class="form-label">Payment Method *</label>
+                            <div class="payment-methods">
+                                <div class="payment-method" onclick="selectPaymentMethod('cash')" data-testid="payment-cash">
+                                    💰 Cash
+                                </div>
+                                <div class="payment-method" onclick="selectPaymentMethod('card')" data-testid="payment-card">
+                                    💳 Card
+                                </div>
+                                <div class="payment-method" onclick="selectPaymentMethod('eft')" data-testid="payment-eft">
+                                    🏧 EFT
+                                </div>
+                                <div class="payment-method" onclick="selectPaymentMethod('medical_aid')" data-testid="payment-medical-aid">
+                                    🏥 Medical Aid
+                                </div>
+                            </div>
+                            <input type="hidden" name="paymentMethod" id="selectedPaymentMethod" value="cash">
+                        </div>
+                        
+                        <div id="medicalAidDetails" class="medical-aid-details">
+                            <h4 class="card-title mb-1">Medical Aid Information</h4>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label class="form-label">Medical Aid Provider *</label>
+                                    <input type="text" class="form-input" name="medicalAidProvider" placeholder="e.g., Discovery Health" data-testid="input-medical-aid-provider">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Medical Aid Number *</label>
+                                    <input type="text" class="form-input" name="medicalAidNumber" placeholder="e.g., DH123456789" data-testid="input-medical-aid-number">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Principal Member Name</label>
+                                    <input type="text" class="form-input" name="medicalAidPrincipalMember" data-testid="input-principal-member">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Dependent Code</label>
+                                    <input type="text" class="form-input" name="medicalAidDependentCode" placeholder="e.g., 01, 02" data-testid="input-dependent-code">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-2">
+                        <button type="submit" class="btn btn-primary" data-testid="button-register-patient">
+                            <span class="spinner hidden" id="registerSpinner"></span>
+                            Register Patient
+                        </button>
+                        <button type="reset" class="btn btn-outline" data-testid="button-clear-form">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Patient Lookup Tab -->
+        <div id="lookup" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Patient Lookup</h2>
+                    <p class="card-description">Search and manage existing patients</p>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Search Patients</label>
+                    <input type="text" class="form-input" id="searchInput" placeholder="Search by name, phone, ID, or medical aid number..." data-testid="input-search-patients">
+                </div>
+
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Date of Birth</th>
+                                <th>Payment Method</th>
+                                <th>Registered</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientsTable" data-testid="patients-table">
+                            <tr>
+                                <td colspan="6" class="text-center">Loading patients...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visit Tracking Tab -->
+        <div id="visits" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Patient Visit Tracking</h2>
+                    <p class="card-description">Track up to 5 visits per patient with progress monitoring</p>
+                </div>
+                
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Select Patient *</label>
+                        <select class="form-select" id="visitPatientSelect" onchange="loadPatientConsents()" data-testid="select-visit-patient">
+                            <option value="">Select a patient...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Select Treatment/Consent *</label>
+                        <select class="form-select" id="visitConsentSelect" onchange="loadPatientVisits()" data-testid="select-visit-consent">
+                            <option value="">Select patient first...</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="visitTrackingContainer" class="hidden">
+                    <div class="visit-tabs" id="visitTabs" data-testid="visit-tabs">
+                        <!-- Visit tabs will be generated here -->
+                    </div>
+                    
+                    <div id="visitContent" class="visit-content" data-testid="visit-content">
+                        <p class="text-center">Select a visit to record or view details</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consent Forms Tab -->
+        <div id="consent" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Digital Consent Forms</h2>
+                    <p class="card-description">Create and manage patient consent forms with digital signatures</p>
+                </div>
+                
+                <form id="consentForm" data-testid="consent-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Select Patient *</label>
+                            <select class="form-select" name="patientId" required id="consentPatientSelect" data-testid="select-consent-patient">
+                                <option value="">Select a patient...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nurse Name *</label>
+                            <input type="text" class="form-input" name="nurseName" required data-testid="input-nurse-name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Treatment Type *</label>
+                            <select class="form-select" name="treatmentType" required onchange="handleTreatmentTypeChange(this.value)" data-testid="select-treatment-type">
+                                <option value="">Select treatment...</option>
+                                <option value="lipolytic">Lipolytic Injections</option>
+                                <option value="ozempic_mounjaro">Ozempic/Mounjaro Weight Loss</option>
+                                <option value="skin_removal">Skin Tag/Mole/Wart Removal</option>
+                                <option value="iv_therapy">IV Therapy</option>
+                                <option value="other">Other (Custom)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Treatment Date *</label>
+                            <input type="date" class="form-input" name="treatmentDate" required data-testid="input-treatment-date">
+                        </div>
+                    </div>
+
+                    <div id="customTreatmentSection" class="hidden">
+                        <div class="form-group">
+                            <label class="form-label">Custom Treatment Name</label>
+                            <input type="text" class="form-input" name="treatmentName" data-testid="input-treatment-name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Custom Terms and Conditions</label>
+                            <textarea class="form-textarea" name="customTerms" rows="5" placeholder="Enter custom terms and conditions for this treatment..." data-testid="textarea-custom-terms"></textarea>
+                        </div>
+                    </div>
+
+                    <h3 class="card-title mb-2 mt-2">Vitals</h3>
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label class="form-label">Blood Pressure (BP)</label>
+                            <input type="text" class="form-input" name="bp" placeholder="120/80" data-testid="input-bp">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Pulse</label>
+                            <input type="text" class="form-input" name="pulse" placeholder="72" data-testid="input-pulse">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Temperature</label>
+                            <input type="text" class="form-input" name="temperature" placeholder="36.5°C" data-testid="input-temperature">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Weight</label>
+                            <input type="text" class="form-input" name="weight" placeholder="70kg" data-testid="input-weight">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">HGT (Glucose)</label>
+                            <input type="text" class="form-input" name="hgt" placeholder="5.5mmol/L" data-testid="input-hgt">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">HB (Hemoglobin)</label>
+                            <input type="text" class="form-input" name="hb" placeholder="14g/dL" data-testid="input-hb">
+                        </div>
+                    </div>
+
+                    <h3 class="card-title mb-2 mt-2">Consent Information</h3>
+                    <div id="consentTemplate" class="card p-2 mb-2" data-testid="consent-template">
+                        <p>Please select a treatment type to view consent information.</p>
+                    </div>
+
+                    <h3 class="card-title mb-2 mt-2">Digital Signature</h3>
+                    <div class="signature-container">
+                        <p class="mb-1">Please sign below to provide consent for the treatment:</p>
+                        <canvas id="signatureCanvas" width="600" height="200" data-testid="signature-canvas"></canvas>
+                        <div class="mt-1">
+                            <button type="button" class="btn btn-outline" onclick="clearSignature()" data-testid="button-clear-signature">Clear Signature</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label class="form-label">
+                            <input type="checkbox" name="consentGiven" required style="margin-right: 0.5rem;" data-testid="checkbox-consent-given">
+                            I confirm that the patient has provided informed consent for this treatment
+                        </label>
+                    </div>
+
+                    <div class="text-center mt-2">
+                        <button type="submit" class="btn btn-primary" data-testid="button-save-consent">
+                            <span class="spinner hidden" id="consentSpinner"></span>
+                            Save Consent Form
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="generateConsentPDF()" data-testid="button-generate-pdf">Generate PDF</button>
+                        <button type="reset" class="btn btn-outline" data-testid="button-clear-consent">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Medical Certificates Tab -->
+        <div id="certificates" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Medical Certificates</h2>
+                    <p class="card-description">Issue medical certificates for sick notes and medical leave</p>
+                </div>
+                
+                <div class="form-grid-2">
+                    <div class="card">
+                        <h3 class="card-title">Issue New Certificate</h3>
+                        <form id="certificateForm" data-testid="certificate-form">
+                            <div class="form-group">
+                                <label class="form-label">Select Patient *</label>
+                                <select class="form-select" name="patientId" required id="certificatePatientSelect" onchange="loadPatientVisitsForCertificate()" data-testid="select-certificate-patient">
+                                    <option value="">Select a patient...</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Related Visit (Optional)</label>
+                                <select class="form-select" name="visitId" id="certificateVisitSelect" data-testid="select-certificate-visit">
+                                    <option value="">No specific visit</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Attending Nurse *</label>
+                                <input type="text" class="form-input" name="nurseName" required data-testid="input-certificate-nurse">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Certificate Date *</label>
+                                <input type="date" class="form-input" name="certificateDate" required data-testid="input-certificate-date">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Diagnosis/Condition *</label>
+                                <textarea class="form-textarea" name="diagnosisOrCondition" rows="3" required placeholder="Describe the medical condition or diagnosis..." data-testid="textarea-diagnosis"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Recommended Rest Days *</label>
+                                <input type="number" class="form-input" name="recommendedRestDays" min="1" max="365" required data-testid="input-rest-days">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Work Restrictions</label>
+                                <textarea class="form-textarea" name="workRestrictions" rows="2" placeholder="Any specific work restrictions..." data-testid="textarea-work-restrictions"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Additional Recommendations</label>
+                                <textarea class="form-textarea" name="additionalRecommendations" rows="2" placeholder="Additional medical recommendations..." data-testid="textarea-additional-recommendations"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <input type="checkbox" name="followUpRequired" style="margin-right: 0.5rem;" data-testid="checkbox-follow-up">
+                                    Follow-up required
+                                </label>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Follow-up Date (if required)</label>
+                                <input type="date" class="form-input" name="followUpDate" data-testid="input-follow-up-date">
+                            </div>
+                            
+                            <h4 class="card-title mb-1 mt-2">Digital Signature</h4>
+                            <div class="signature-container">
+                                <p class="mb-1">Nurse signature for the medical certificate:</p>
+                                <canvas id="certificateSignatureCanvas" width="400" height="150" data-testid="certificate-signature-canvas"></canvas>
+                                <div class="mt-1">
+                                    <button type="button" class="btn btn-outline" onclick="clearCertificateSignature()" data-testid="button-clear-certificate-signature">Clear Signature</button>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-2">
+                                <button type="submit" class="btn btn-primary" data-testid="button-issue-certificate">
+                                    <span class="spinner hidden" id="certificateSpinner"></span>
+                                    Issue Certificate
+                                </button>
+                                <button type="reset" class="btn btn-outline" data-testid="button-clear-certificate">Clear Form</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Recent Certificates</h3>
+                        <div id="recentCertificates" data-testid="recent-certificates">
+                            <p class="text-center">Loading recent certificates...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Reports & Analytics</h2>
+                    <p class="card-description">Generate comprehensive reports and analytics</p>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="card">
+                        <h3 class="card-title">Patient Reports</h3>
+                        <p class="card-description">Generate individual patient reports</p>
+                        <div class="form-group">
+                            <label class="form-label">Select Patient</label>
+                            <select class="form-select" id="reportPatientSelect" data-testid="select-report-patient">
+                                <option value="">Select a patient...</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="generatePatientReport()" data-testid="button-generate-patient-report">Generate Patient Report</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">System Reports</h3>
+                        <p class="card-description">Generate system-wide analytics</p>
+                        <div class="form-group">
+                            <label class="form-label">Report Type</label>
+                            <select class="form-select" id="systemReportType" data-testid="select-system-report-type">
+                                <option value="patients">All Patients Summary</option>
+                                <option value="consent">Consent Forms Summary</option>
+                                <option value="treatments">Treatment Analytics</option>
+                                <option value="vitals">Vitals Tracking</option>
+                                <option value="certificates">Medical Certificates</option>
+                                <option value="visits">Visit Analytics</option>
+                                <option value="payments">Payment Methods Report</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-success" onclick="generateSystemReport()" data-testid="button-generate-system-report">Generate System Report</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Medical Certificates</h3>
+                        <p class="card-description">Manage and email certificates</p>
+                        <div class="form-group">
+                            <label class="form-label">Select Certificate</label>
+                            <select class="form-select" id="certificateReportSelect" data-testid="select-certificate-report">
+                                <option value="">Select a certificate...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" id="certificateEmailInput" placeholder="Enter email address..." data-testid="input-certificate-email">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-info" onclick="downloadCertificate()" data-testid="button-download-certificate">Download Certificate</button>
+                            <button class="btn btn-warning" onclick="emailCertificate()" data-testid="button-email-certificate">Email Certificate</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">System Settings</h2>
+                    <p class="card-description">Configure system preferences and settings</p>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="card">
+                        <h3 class="card-title">System Information</h3>
+                        <p><strong>System:</strong> Mbeki Healthcare Patient Management</p>
+                        <p><strong>Version:</strong> 2.0.0</p>
+                        <p><strong>Developer:</strong> <a href="https://www.champsafrica.com" target="_blank" class="footer-link">Champs Group</a></p>
+                        <p><strong>Error Reporting:</strong> info@champsafrica.com</p>
+                        <p><strong>New Features:</strong> Medical Certificates, Visit Tracking, Payment Options</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Database Status</h3>
+                        <p id="dbStatus" data-testid="db-status">Checking connection...</p>
+                        <button class="btn btn-outline" onclick="checkDatabaseConnection()" data-testid="button-check-db">Test Connection</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Export/Import Data</h3>
+                    <p class="card-description">Backup and restore system data</p>
+                    <div class="form-group">
+                        <button class="btn btn-secondary" onclick="exportData()" data-testid="button-export-data">Export All Data</button>
+                        <button class="btn btn-outline" onclick="document.getElementById('importFile').click()" data-testid="button-import-data">Import Data</button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-text">
+                © 2024 Mbeki Healthcare Patient Management System
+            </div>
+            <div class="footer-text">
+                Developed & Owned by 
+                <a href="https://www.champsafrica.com" target="_blank" class="footer-link">Champs Group</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Patient Details Modal -->
+    <div id="patientModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Patient Details</h3>
+                <button class="modal-close" onclick="closeModal('patientModal')" data-testid="button-close-patient-modal">&times;</button>
+            </div>
+            <div id="patientDetails" data-testid="patient-details">
+                <!-- Patient details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Certificate Preview Modal -->
+    <div id="certificateModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Medical Certificate Preview</h3>
+                <button class="modal-close" onclick="closeModal('certificateModal')" data-testid="button-close-certificate-modal">&times;</button>
+            </div>
+            <div id="certificatePreview" data-testid="certificate-preview">
+                <!-- Certificate preview will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global Variables
+        let currentSignature = null;
+        let signatureCanvas = null;
+        let signatureCtx = null;
+        let isDrawing = false;
+        
+        // Certificate signature canvas
+        let certificateSignatureCanvas = null;
+        let certificateSignatureCtx = null;
+        let isCertificateDrawing = false;
+        
+        // Current selections
+        let currentPatientId = null;
+        let currentConsentFormId = null;
+        let currentVisitNumber = 1;
+
+        // Consent Templates
+        const consentTemplates = {
+            lipolytic: {
+                title: "Lipolytic Injections Consent",
+                text: `
+                    <h4>INFORMED CONSENT FOR LIPOLYTIC INJECTIONS</h4>
+                    <p>I understand that lipolytic injections are used to reduce localized fat deposits. The treatment involves multiple injections and may require several sessions.</p>
+                    <p><strong>Risks include:</strong> Temporary swelling, bruising, discomfort, and rare allergic reactions.</p>
+                    <p><strong>Expected results:</strong> Gradual reduction of fat in treated areas over 4-6 weeks.</p>
+                    <p>I have been informed of all risks and alternatives and consent to this treatment.</p>
+                `
+            },
+            ozempic_mounjaro: {
+                title: "Ozempic/Mounjaro Weight Loss Treatment",
+                text: `
+                    <h4>INFORMED CONSENT FOR OZEMPIC/MOUNJARO TREATMENT</h4>
+                    <p>I understand that Ozempic/Mounjaro are prescribed for weight management and diabetes control.</p>
+                    <p><strong>Common side effects:</strong> Nausea, vomiting, diarrhea, decreased appetite.</p>
+                    <p><strong>Serious risks:</strong> Pancreatitis, gallbladder problems, kidney problems.</p>
+                    <p>I understand the importance of regular follow-ups and monitoring during treatment.</p>
+                    <p>I consent to this treatment and will follow all medical instructions.</p>
+                `
+            },
+            skin_removal: {
+                title: "Skin Tag/Mole/Wart Removal",
+                text: `
+                    <h4>INFORMED CONSENT FOR SKIN LESION REMOVAL</h4>
+                    <p>I understand that skin tag, mole, or wart removal may be performed using various methods including excision, electrocautery, or cryotherapy.</p>
+                    <p><strong>Risks include:</strong> Scarring, infection, bleeding, and possible recurrence.</p>
+                    <p><strong>Post-care:</strong> Keep area clean and dry, follow wound care instructions.</p>
+                    <p>I understand that results may vary and consent to this procedure.</p>
+                `
+            },
+            iv_therapy: {
+                title: "IV Therapy Treatment",
+                text: `
+                    <h4>INFORMED CONSENT FOR IV THERAPY</h4>
+                    <p>I understand that IV therapy involves the administration of vitamins, minerals, and other nutrients directly into the bloodstream.</p>
+                    <p><strong>Risks include:</strong> Infection at injection site, phlebitis, allergic reactions.</p>
+                    <p><strong>Benefits:</strong> Improved hydration, nutrient absorption, and potential wellness benefits.</p>
+                    <p>I have disclosed all medical conditions and medications and consent to this treatment.</p>
+                `
+            }
+        };
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSignatureCanvas();
+            initializeCertificateSignatureCanvas();
+            loadDashboardData();
+            loadPatients();
+            checkDatabaseConnection();
+            setupErrorReporting();
+            
+            // Set default payment method
+            selectPaymentMethod('cash');
+            
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            const certificateDateInput = document.querySelector('input[name="certificateDate"]');
+            const treatmentDateInput = document.querySelector('input[name="treatmentDate"]');
+            
+            if (certificateDateInput) certificateDateInput.value = today;
+            if (treatmentDateInput) treatmentDateInput.value = today;
+        });
+
+        // Payment Method Selection
+        function selectPaymentMethod(method) {
+            // Remove selected class from all payment methods
+            document.querySelectorAll('.payment-method').forEach(pm => {
+                pm.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked method
+            const selectedMethod = document.querySelector(`[data-testid="payment-${method}"]`);
+            if (selectedMethod) selectedMethod.classList.add('selected');
+            
+            // Set hidden input value
+            document.getElementById('selectedPaymentMethod').value = method;
+            
+            // Show/hide medical aid details
+            const medicalAidDetails = document.getElementById('medicalAidDetails');
+            if (method === 'medical_aid') {
+                medicalAidDetails.style.display = 'block';
+                // Make medical aid fields required
+                const providerInput = document.querySelector('input[name="medicalAidProvider"]');
+                const numberInput = document.querySelector('input[name="medicalAidNumber"]');
+                if (providerInput) providerInput.required = true;
+                if (numberInput) numberInput.required = true;
+            } else {
+                medicalAidDetails.style.display = 'none';
+                // Remove required from medical aid fields
+                const providerInput = document.querySelector('input[name="medicalAidProvider"]');
+                const numberInput = document.querySelector('input[name="medicalAidNumber"]');
+                if (providerInput) providerInput.required = false;
+                if (numberInput) numberInput.required = false;
+            }
+        }
+
+        // Tab Management
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Remove active class from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) selectedTab.classList.remove('hidden');
+            
+            // Add active class to clicked nav tab
+            if (event && event.target) event.target.classList.add('active');
+            
+            // Load tab-specific data
+            if (tabName === 'dashboard') {
+                loadDashboardData();
+            } else if (tabName === 'lookup') {
+                loadPatients();
+            } else if (tabName === 'consent') {
+                loadPatientsForConsent();
+            } else if (tabName === 'reports') {
+                loadPatientsForReports();
+                loadCertificatesForReports();
+            } else if (tabName === 'certificates') {
+                loadPatientsForCertificates();
+                loadRecentCertificates();
+            } else if (tabName === 'visits') {
+                loadPatientsForVisits();
+            }
+        }
+
+        // Signature Canvas Functions
+        function initializeSignatureCanvas() {
+            signatureCanvas = document.getElementById('signatureCanvas');
+            if (!signatureCanvas) return;
+            
+            signatureCtx = signatureCanvas.getContext('2d');
+            
+            // Set canvas background
+            signatureCtx.fillStyle = 'white';
+            signatureCtx.fillRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+            
+            // Set drawing style
+            signatureCtx.strokeStyle = '#000';
+            signatureCtx.lineWidth = 2;
+            signatureCtx.lineCap = 'round';
+            
+            // Mouse events
+            signatureCanvas.addEventListener('mousedown', startDrawing);
+            signatureCanvas.addEventListener('mousemove', draw);
+            signatureCanvas.addEventListener('mouseup', stopDrawing);
+            signatureCanvas.addEventListener('mouseout', stopDrawing);
+            
+            // Touch events for mobile
+            signatureCanvas.addEventListener('touchstart', handleTouch);
+            signatureCanvas.addEventListener('touchmove', handleTouch);
+            signatureCanvas.addEventListener('touchend', stopDrawing);
+        }
+
+        function initializeCertificateSignatureCanvas() {
+            certificateSignatureCanvas = document.getElementById('certificateSignatureCanvas');
+            if (!certificateSignatureCanvas) return;
+            
+            certificateSignatureCtx = certificateSignatureCanvas.getContext('2d');
+            
+            // Set canvas background
+            certificateSignatureCtx.fillStyle = 'white';
+            certificateSignatureCtx.fillRect(0, 0, certificateSignatureCanvas.width, certificateSignatureCanvas.height);
+            
+            // Set drawing style
+            certificateSignatureCtx.strokeStyle = '#000';
+            certificateSignatureCtx.lineWidth = 2;
+            certificateSignatureCtx.lineCap = 'round';
+            
+            // Mouse events
+            certificateSignatureCanvas.addEventListener('mousedown', startCertificateDrawing);
+            certificateSignatureCanvas.addEventListener('mousemove', drawCertificate);
+            certificateSignatureCanvas.addEventListener('mouseup', stopCertificateDrawing);
+            certificateSignatureCanvas.addEventListener('mouseout', stopCertificateDrawing);
+            
+            // Touch events for mobile
+            certificateSignatureCanvas.addEventListener('touchstart', handleCertificateTouch);
+            certificateSignatureCanvas.addEventListener('touchmove', handleCertificateTouch);
+            certificateSignatureCanvas.addEventListener('touchend', stopCertificateDrawing);
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = signatureCanvas.getBoundingClientRect();
+            signatureCtx.beginPath();
+            signatureCtx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = signatureCanvas.getBoundingClientRect();
+            signatureCtx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            signatureCtx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function startCertificateDrawing(e) {
+            isCertificateDrawing = true;
+            const rect = certificateSignatureCanvas.getBoundingClientRect();
+            certificateSignatureCtx.beginPath();
+            certificateSignatureCtx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function drawCertificate(e) {
+            if (!isCertificateDrawing) return;
+            const rect = certificateSignatureCanvas.getBoundingClientRect();
+            certificateSignatureCtx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            certificateSignatureCtx.stroke();
+        }
+
+        function stopCertificateDrawing() {
+            isCertificateDrawing = false;
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 
+                                            e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            signatureCanvas.dispatchEvent(mouseEvent);
+        }
+
+        function handleCertificateTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 
+                                            e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            certificateSignatureCanvas.dispatchEvent(mouseEvent);
+        }
+
+        function clearSignature() {
+            if (signatureCtx && signatureCanvas) {
+                signatureCtx.fillStyle = 'white';
+                signatureCtx.fillRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+                currentSignature = null;
+            }
+        }
+
+        function clearCertificateSignature() {
+            if (certificateSignatureCtx && certificateSignatureCanvas) {
+                certificateSignatureCtx.fillStyle = 'white';
+                certificateSignatureCtx.fillRect(0, 0, certificateSignatureCanvas.width, certificateSignatureCanvas.height);
+            }
+        }
+
+        function getSignatureData() {
+            return signatureCanvas ? signatureCanvas.toDataURL('image/png') : '';
+        }
+
+        function getCertificateSignatureData() {
+            return certificateSignatureCanvas ? certificateSignatureCanvas.toDataURL('image/png') : '';
+        }
+
+        // API Functions
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            try {
+                const options = {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                };
+                
+                if (data) {
+                    options.body = JSON.stringify(data);
+                }
+                
+                const response = await fetch(endpoint, options);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                reportError(error, { endpoint, method, data });
+                throw error;
+            }
+        }
+
+        // Error Reporting
+        function setupErrorReporting() {
+            window.addEventListener('error', function(e) {
+                reportError(e.error || e.message, {
+                    filename: e.filename,
+                    lineno: e.lineno,
+                    colno: e.colno
+                });
+            });
+
+            window.addEventListener('unhandledrejection', function(e) {
+                reportError(e.reason, { type: 'unhandledrejection' });
+            });
+        }
+
+        async function reportError(error, context = {}) {
+            try {
+                const errorData = {
+                    message: error.message || error.toString(),
+                    stack: error.stack,
+                    url: window.location.href,
+                    userAgent: navigator.userAgent,
+                    timestamp: new Date().toISOString(),
+                    context: context
+                };
+
+                await fetch('api/report_error.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(errorData)
+                });
+            } catch (reportingError) {
+                console.error('Failed to report error:', reportingError);
+            }
+        }
+
+        // Dashboard Functions
+        async function loadDashboardData() {
+            try {
+                const stats = await apiCall('api/dashboard_stats.php');
+                updateStatElement('totalPatients', stats.totalPatients || 0);
+                updateStatElement('consentForms', stats.consentForms || 0);
+                updateStatElement('todayVisits', stats.todayVisits || 0);
+                updateStatElement('todayCertificates', stats.todayCertificates || 0);
+                updateStatElement('upcomingAppointments', stats.upcomingAppointments || 0);
+                updateStatElement('validCertificates', stats.validCertificates || 0);
+
+                const patients = await apiCall('api/get_patients.php?limit=5');
+                displayRecentPatients(patients);
+                
+                displayPaymentBreakdown(stats.paymentBreakdown || {});
+            } catch (error) {
+                showToast('Failed to load dashboard data', 'error');
+            }
+        }
+
+        function updateStatElement(id, value) {
+            const element = document.getElementById(id);
+            if (element) element.textContent = value;
+        }
+
+        function displayRecentPatients(patients) {
+            const container = document.getElementById('recentPatients');
+            if (!container) return;
+            
+            if (!patients || patients.length === 0) {
+                container.innerHTML = '<p class="text-center">No patients registered yet.</p>';
+                return;
+            }
+
+            const html = patients.map(patient => `
+                <div class="card mb-1" style="cursor: pointer;" onclick="viewPatient('${patient.id}')">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${patient.firstName} ${patient.lastName}</strong><br>
+                            <small class="text-muted">${patient.phone}</small><br>
+                            <small class="text-info">${patient.paymentMethod?.toUpperCase() || 'CASH'}</small>
+                        </div>
+                        <small class="text-muted">${formatDate(patient.createdAt)}</small>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        function displayPaymentBreakdown(breakdown) {
+            const container = document.getElementById('paymentBreakdown');
+            if (!container) return;
+            
+            if (!breakdown || Object.keys(breakdown).length === 0) {
+                container.innerHTML = '<p class="text-center">No payment data available.</p>';
+                return;
+            }
+
+            const html = Object.entries(breakdown).map(([method, count]) => `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>${method?.toUpperCase() || 'UNKNOWN'}:</span>
+                    <strong>${count}</strong>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        // Load functions (simplified for space)
+        async function loadPatients() {
+            try {
+                const patients = await apiCall('api/get_patients.php');
+                displayPatientsTable(patients);
+            } catch (error) {
+                showToast('Failed to load patients', 'error');
+            }
+        }
+
+        function displayPatientsTable(patients) {
+            const tbody = document.getElementById('patientsTable');
+            if (!tbody) return;
+            
+            if (!patients || patients.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">No patients found.</td></tr>';
+                return;
+            }
+
+            const html = patients.map(patient => `
+                <tr>
+                    <td>${patient.firstName} ${patient.lastName}</td>
+                    <td>${patient.phone}</td>
+                    <td>${formatDate(patient.dateOfBirth)}</td>
+                    <td><span class="text-info">${patient.paymentMethod?.toUpperCase() || 'CASH'}</span></td>
+                    <td>${formatDate(patient.createdAt)}</td>
+                    <td>
+                        <button class="btn btn-outline btn-sm" onclick="viewPatient('${patient.id}')">View</button>
+                        <button class="btn btn-outline btn-sm" onclick="editPatient('${patient.id}')">Edit</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            tbody.innerHTML = html;
+        }
+
+        // Simplified load functions for patient dropdowns
+        async function loadPatientsForConsent() {
+            await loadPatientsForSelect('consentPatientSelect');
+        }
+
+        async function loadPatientsForCertificates() {
+            await loadPatientsForSelect('certificatePatientSelect');
+        }
+
+        async function loadPatientsForVisits() {
+            await loadPatientsForSelect('visitPatientSelect');
+        }
+
+        async function loadPatientsForReports() {
+            await loadPatientsForSelect('reportPatientSelect');
+        }
+
+        async function loadPatientsForSelect(selectId) {
+            try {
+                const patients = await apiCall('api/get_patients.php');
+                const select = document.getElementById(selectId);
+                if (!select) return;
+                
+                select.innerHTML = '<option value="">Select a patient...</option>';
+                
+                patients.forEach(patient => {
+                    const option = document.createElement('option');
+                    option.value = patient.id;
+                    option.textContent = `${patient.firstName} ${patient.lastName} - ${patient.phone}`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                showToast('Failed to load patients', 'error');
+            }
+        }
+
+        // Form submission handlers (simplified)
+        if (document.getElementById('patientForm')) {
+            document.getElementById('patientForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const spinner = document.getElementById('registerSpinner');
+                if (spinner) spinner.classList.remove('hidden');
+                
+                try {
+                    const formData = new FormData(this);
+                    const data = Object.fromEntries(formData.entries());
+                    
+                    await apiCall('api/save_patient.php', 'POST', data);
+                    
+                    showToast('Patient registered successfully!', 'success');
+                    this.reset();
+                    selectPaymentMethod('cash');
+                    loadPatients();
+                    loadPatientsForConsent();
+                    loadPatientsForCertificates();
+                    loadPatientsForVisits();
+                    loadPatientsForReports();
+                    loadDashboardData();
+                } catch (error) {
+                    showToast('Failed to register patient', 'error');
+                } finally {
+                    if (spinner) spinner.classList.add('hidden');
+                }
+            });
+        }
+
+        // Utility Functions
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString();
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Placeholder functions for remaining functionality
+        function handleTreatmentTypeChange(treatmentType) {
+            const customSection = document.getElementById('customTreatmentSection');
+            const consentTemplate = document.getElementById('consentTemplate');
+            
+            if (!customSection || !consentTemplate) return;
+            
+            if (treatmentType === 'other') {
+                customSection.classList.remove('hidden');
+                consentTemplate.innerHTML = '<p>Please fill in the custom terms and conditions above.</p>';
+            } else {
+                customSection.classList.add('hidden');
+                
+                if (treatmentType && consentTemplates[treatmentType]) {
+                    consentTemplate.innerHTML = consentTemplates[treatmentType].text;
+                } else {
+                    consentTemplate.innerHTML = '<p>Please select a treatment type to view consent information.</p>';
+                }
+            }
+        }
+
+        async function checkDatabaseConnection() {
+            try {
+                const result = await apiCall('api/check_db.php');
+                const statusEl = document.getElementById('dbStatus');
+                if (statusEl) {
+                    statusEl.innerHTML = `<span class="text-success">✓ Connected (${result.message})</span>`;
+                }
+            } catch (error) {
+                const statusEl = document.getElementById('dbStatus');
+                if (statusEl) {
+                    statusEl.innerHTML = '<span class="text-danger">✗ Connection Failed</span>';
+                }
+            }
+        }
+
+        // Placeholder functions (implement as needed)
+        function viewPatient(patientId) { showToast('View patient functionality', 'info'); }
+        function editPatient(patientId) { showToast('Edit patient functionality', 'info'); }
+        function loadRecentCertificates() { /* TODO */ }
+        function loadCertificatesForReports() { /* TODO */ }
+        function loadPatientConsents() { /* TODO */ }
+        function loadPatientVisits() { /* TODO */ }
+        function loadPatientVisitsForCertificate() { /* TODO */ }
+        function generateConsentPDF() { showToast('PDF generation functionality', 'info'); }
+        function generatePatientReport() { showToast('Patient report functionality', 'info'); }
+        function generateSystemReport() { showToast('System report functionality', 'info'); }
+        function downloadCertificate() { showToast('Certificate download functionality', 'info'); }
+        function emailCertificate() { showToast('Certificate email functionality', 'info'); }
+        function exportData() { showToast('Export data functionality', 'info'); }
+        function importData() { showToast('Import data functionality', 'info'); }
+        function closeModal(modalId) { 
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.add('hidden');
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#patientsTable tr');
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(searchTerm) ? '' : 'none';
+                });
+            });
+        }
+    </script>
+</body>
+</html>
